@@ -20,6 +20,7 @@ Using raw **NIST First Ionization Energy (IE)** data for the *p-block* across Pe
 - a stable **\(+3/-4\)** normalization that produces shell-scaled units \(G_n^{(3)}, G_n^{(4)}\)
 - a **coherence ratio** \(C_n\) near unity for Periods 2–4 under CAF
 - a **channel-selective breakdown** beginning at Period 5
+- baseline-robust persistence of the mid-shell structure under **holdout baselines**
 
 This repository constitutes the **verification backbone** for the Geometric Occupancy Rule and the refinement of Background Phase Geometry (BPG).
 
@@ -43,9 +44,9 @@ This repository does **not** assume these claims — it tests the *data-level in
 ✔ Loads **raw NIST IE data** (no preprocessing)  
 ✔ Applies a **single fixed linear operator** (CAF)  
 ✔ Extracts **geometric residuals**  
-✔ Tests **robustness to baseline choice** (holdout baselines)  
-✔ Separates **symmetry vs. collision channels**  
-✔ Quantifies **coherence loss** at higher shells  
+✔ Defines **channel units** and a **coherence ratio** under CAF  
+✔ Tests **robustness to baseline choice** using **holdout baselines**  
+✔ Quantifies robustness with **mean/std/CV** and produces a **CV vs period** plot  
 
 🚫 No chemical heuristics  
 🚫 No Hartree–Fock / DFT fitting  
@@ -57,29 +58,26 @@ This repository does **not** assume these claims — it tests the *data-level in
 
 NOTE: The tree below is shown in a plain indented format to avoid nested fenced code blocks.
 
+This repository tracks **source + raw data**. Generated outputs (CSVs/PNGs) are produced locally and should be ignored (see `.gitignore` / Option B).
+
     gor-caf/
     ├── pyproject.toml
-    ├── LICENSE    
+    ├── LICENSE
     ├── README.md
     ├── data/
-    │   ├── raw/
-    │   │   └── nist_pblock_periods_2to5.csv
-    │   └── derived/
-    │       ├── caf_exhibit.csv
-    │       ├── baseline_sensitivity_admissible.csv
-    │       ├── baseline_sensitivity_admissible_summary.csv
-    │       ├── baseline_sensitivity_all.csv
-    │       ├── baseline_sensitivity_all_summary.csv
-    │       └── baseline_sensitivity_lambda_sweep.csv
+    │   └── raw/
+    │       └── nist_pblock_periods_2to5.csv
     ├── scripts/
     │   ├── gor_analyze.py
     │   ├── gor_baseline_sensitivity.py
     │   ├── gor_baseline_sensitivity_sweep.py
-    │   ├── gor_overlap_predict.py
     │   ├── gor_plot.py
+    │   ├── gor_plot_cv.py
+    │   ├── gor_overlap_predict.py
     │   └── gor_verify_all.sh
     ├── src/
     │   └── gor_caf/
+    │       ├── __init__.py
     │       ├── caf.py
     │       ├── datasets.py
     │       ├── metrics.py
@@ -92,6 +90,14 @@ NOTE: The tree below is shown in a plain indented format to avoid nested fenced 
         ├── test_baseline_holdout.py
         ├── test_baseline_methods.py
         └── test_baseline_methods_strict.py
+
+Generated locally (not committed under Option B):
+
+    data/derived/
+      caf_exhibit.csv
+      baseline_sensitivity_*.(csv)
+      channel_split*.png
+      cv_vs_period_admissible.png
 
 ---
 
@@ -189,7 +195,7 @@ Run:
 
     python3 ./scripts/gor_analyze.py --csv data/raw/nist_pblock_periods_2to5.csv
 
-This writes:
+This writes (locally):
 
 - `data/derived/caf_exhibit.csv`
 
@@ -205,7 +211,7 @@ The exhibit includes:
 
 To demonstrate that the observed mid-shell structure is not an artifact of CAF’s particular baseline choice, this repository includes a **holdout baseline family** that fits only the edge points \(\{p^1,p^2,p^5,p^6\}\), leaving \(\{p^3,p^4\}\) as genuine out-of-sample structure.
 
-For each period, we report:
+For each period, we report the holdout ratio:
 
 \[
 \mathcal{R} \equiv \left|\frac{r_{p^3}}{r_{p^4}}\right|.
@@ -239,7 +245,7 @@ A holdout baseline is considered physically admissible if:
 Baselines violating these criteria are included only in `--mode all`
 as diagnostic contrasts and do not constitute admissible robustness tests.
 
-### Run baseline sensitivity
+### Run baseline sensitivity + CV metric
 
 Admissible-only:
 
@@ -247,10 +253,14 @@ Admissible-only:
       --csv data/raw/nist_pblock_periods_2to5.csv \
       --mode admissible
 
-Writes:
+Writes (locally):
 
 - `data/derived/baseline_sensitivity_admissible.csv`
 - `data/derived/baseline_sensitivity_admissible_summary.csv`
+
+The summary includes mean/std/min/max/count and:
+
+- \( \mathrm{CV} \equiv \mathrm{std} / \mathrm{mean} \)
 
 All baselines (includes diagnostics):
 
@@ -258,7 +268,7 @@ All baselines (includes diagnostics):
       --csv data/raw/nist_pblock_periods_2to5.csv \
       --mode all
 
-Writes:
+Writes (locally):
 
 - `data/derived/baseline_sensitivity_all.csv`
 - `data/derived/baseline_sensitivity_all_summary.csv`
@@ -268,7 +278,7 @@ Lambda sweep (continuous perturbation family):
     python3 ./scripts/gor_baseline_sensitivity_sweep.py \
       --csv data/raw/nist_pblock_periods_2to5.csv
 
-Writes:
+Writes (locally):
 
 - `data/derived/baseline_sensitivity_lambda_sweep.csv`
 
@@ -289,7 +299,7 @@ In other words:
 - **CAF**: tests whether a fixed, anchor-defined operator produces channel units with \(C_n \approx 1\) (Periods 2–4) and degrades at Period 5.
 - **Holdout baselines**: test whether the *existence and sign-structure* of \((r_{p^3}, r_{p^4})\) persists across defensible baseline families, without allowing the baseline to “eat” the mid-shell signal.
 
-The fact that \(\mathcal{R}\) is stable across admissible baselines (and collapses at Period 5) is strong evidence that the mid-shell structure is real and that the Period 5 crossover is not a CAF artifact.
+The fact that \(\mathcal{R}\) is stable across admissible baselines (and shifts at Period 5) is strong evidence that the mid-shell structure is real and that the Period 5 crossover is not a CAF artifact.
 
 ---
 
@@ -306,18 +316,28 @@ As \(n\) increases, radial dilution and screening effects reduce global alignmen
 
 ---
 
-## Plot the Channel Split (Optional)
+## Plots (Optional)
 
-After generating `data/derived/caf_exhibit.csv`, run:
+Channel split (CAF):
 
     python3 ./scripts/gor_plot.py \
       --exhibit_csv data/derived/caf_exhibit.csv \
       --out_png data/derived/channel_split.png
 
-This produces:
+Produces (locally):
 
 - `data/derived/channel_split.png`
 - `data/derived/channel_split_ratio.png`
+
+CV vs period (admissible holdout baselines):
+
+    python3 ./scripts/gor_plot_cv.py \
+      --summary_csv data/derived/baseline_sensitivity_admissible_summary.csv \
+      --out_png data/derived/cv_vs_period_admissible.png
+
+Produces (locally):
+
+- `data/derived/cv_vs_period_admissible.png`
 
 ---
 
@@ -363,6 +383,7 @@ This performs:
 - strict tests
 - CAF exhibit generation
 - baseline sensitivity (admissible + all)
+- CV plot (admissible)
 
 ---
 
@@ -385,5 +406,6 @@ This repository is intentionally limited to **verification-grade operators and m
 - CAF extraction
 - integer-structure channel units and \(C_n\)
 - baseline robustness diagnostics (holdout baselines)
+- robustness compactness metrics (mean/std/CV) and CV plot
 
 Higher-level modeling (e.g., multi-kernel overlap fitting, coherence-length inference, group-theoretic derivations) should be layered on top of this verified base.
