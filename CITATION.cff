@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+
+message: >-
+  If you use this software in academic or derivative work, please cite this repository.
+  This is an open scholarly verification pipeline; reuse and extension are permitted
+  with attribution.
+
+title: "Geometric Occupancy Rule — Canonical Anchor Fit (GOR-CAF)"
+type: software
+version: "0.1.0"
+date-released: "2025-12-20"
+
+authors:
+  - family-names: Wells
+    given-names: "A. R."
+    affiliation: "Dual-Frame Research Group"
+
+repository-code: "https://github.com/arwells-research/gor-caf"
+license: MIT
+
+keywords:
+  - atomic ionization energies
+  - periodic table
+  - geometric occupancy rule
+  - canonical anchor fit
+  - baseline robustness
+  - verification pipeline
+  - NIST data
+  - reproducible analysis
+
+abstract: >-
+  A verification-grade analysis pipeline for the Geometric Occupancy Rule (GOR),
+  implementing the Canonical Anchor Fit (CAF) and baseline-holdout diagnostics
+  to test invariant mid-shell structure in p-block ionization energies
+  across Periods 2–5 using raw NIST data.
+
+notes: >-
+  This repository provides verification operators and robustness diagnostics only.
+  It does not perform chemical fitting or many-body modeling.
