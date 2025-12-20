@@ -58,7 +58,7 @@ This repository does **not** assume these claims — it tests the *data-level in
 
 NOTE: The tree below is shown in a plain indented format to avoid nested fenced code blocks.
 
-This repository tracks **source + raw data**. Generated outputs (CSVs/PNGs) are produced locally and should be ignored (see `.gitignore` / Option B).
+This repository tracks **source + raw data**. Generated outputs (CSVs/PNGs) are produced locally and should be ignored (see `.gitignore`).
 
     gor-caf/
     ├── pyproject.toml
@@ -91,7 +91,7 @@ This repository tracks **source + raw data**. Generated outputs (CSVs/PNGs) are 
         ├── test_baseline_methods.py
         └── test_baseline_methods_strict.py
 
-Generated locally (not committed under Option B):
+Generated locally (not committed):
 
     data/derived/
       caf_exhibit.csv
