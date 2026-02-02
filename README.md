@@ -4,7 +4,7 @@
 **Affiliation:** Dual-Frame Research Group  
 **License:** MIT  
 **Repository:** `arwells-research/gor-caf`  
-**Status:** Verification & Analysis Pipeline (Foundational)
+**Status:** Verification & Analysis Pipeline (Exploratory structural audit)
 
 ---
 
@@ -12,7 +12,7 @@
 
 This repository provides a clean, reproducible Python implementation of the **Geometric Occupancy Rule (GOR)** verification pipeline using the **Canonical Anchor Fit (CAF)**.
 
-The goal of this project is **not** to fit chemical or many-body models, but to **isolate and test invariant geometric structure** present in atomic ionization energies.
+The goal of this project is **not** to fit chemical or many-body models, but to **isolate and test invariant mid-shell structure** in atomic ionization energies under a fixed, non-tunable operator.
 
 Using raw **NIST First Ionization Energy (IE)** data for the *p-block* across Periods 2–5, the pipeline demonstrates:
 
@@ -22,20 +22,22 @@ Using raw **NIST First Ionization Energy (IE)** data for the *p-block* across Pe
 - a **channel-selective breakdown** beginning at Period 5
 - baseline-robust persistence of the mid-shell structure under **holdout baselines**
 
-This repository constitutes the **verification backbone** for the Geometric Occupancy Rule and the refinement of Background Phase Geometry (BPG).
+**Role in the broader program:** this repository is an **audit-grade probe**. It tests whether a minimal projection-style operator exposes repeatable, low-parameter residual structure in real atomic data. It is **not** a predictive chemistry model and does **not** claim to replace QED, Hartree–Fock, or DFT.
+
+This repository constitutes the **verification backbone** for the Geometric Occupancy Rule and a constrained testing ground for interpretations sometimes referred to as Background Phase Geometry (BPG).
 
 ---
 
 ## Scientific Context (Minimal)
 
-The GOR framework proposes that:
+GOR is motivated by the possibility that atomic energetics contain **repeatable occupancy-structured residuals** consistent with discrete bookkeeping constraints. This repository does **not** assume any specific physical interpretation (topological or otherwise). It tests the *data-level invariants* that such interpretations would require:
 
-- Atomic energetics encode **topological phase-space tiling constraints**
-- The periodic table functions as a **topological phase diagram**
-- Pauli exclusion corresponds to **topological incompressibility**
-- Exchange/repulsion effects correspond to **discrete phase-cell bookkeeping**
+- persistent sign structure at \(p^3/p^4\) under fixed operators
+- reproducible shell-scaled channel units under integer normalization
+- stability of the effect under defensible baseline families
+- a measurable crossover at higher shell index (here, beginning at Period 5)
 
-This repository does **not** assume these claims — it tests the *data-level invariants* required for them to hold.
+Interpretations beyond these invariants should be treated as **downstream hypotheses** layered on top of this verified base.
 
 ---
 
