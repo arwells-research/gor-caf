@@ -424,3 +424,49 @@ This repository is intentionally limited to **verification-grade operators and m
 - robustness compactness metrics (mean/std/CV) and CV plot
 
 Higher-level modeling (e.g., multi-kernel overlap fitting, coherence-length inference, group-theoretic derivations) should be layered on top of this verified base.
+
+### Permutation Null Diagnostic (Ordering-Specific Stress Test)
+
+To assess whether the CAF mid-shell coherence could arise from generic six-point structure rather than ordering-specific effects, this repository includes a **within-period permutation null diagnostic**.
+
+For each period, the six p-block ionization energies are randomly permuted and reprocessed through the **identical CAF operator**, preserving the value distribution, scale, and variance while destroying orbital ordering.
+
+For each period, we evaluate:
+
+- **Sign structure probability**
+
+  P_null(r_{p^3} > 0 and r_{p^4} < 0)
+
+- **Coherence proximity probability**
+
+  P_null(|C − 1| ≤ ε), with ε = 0.1
+
+- **Joint event probability**
+
+  P_null((r_{p^3} > 0 and r_{p^4} < 0) and |C − 1| ≤ ε)
+
+- **Empirical coherence p-value**
+
+  p_value = P_null(|C_perm − 1| ≤ |C_obs − 1|)
+
+The final statistic provides an **ordering-based tail probability** that does not depend on a fixed tolerance parameter.
+
+#### Summary of results (CAF, 20 000 permutations per period)
+
+Period | C_obs | |C − 1| | p_value
+------ | ----- | ------- | --------
+2 | 0.929 | 0.071 | 0.034
+3 | 0.971 | 0.029 | 0.012
+4 | 1.030 | 0.030 | 0.013
+5 | 0.751 | 0.249 | 0.069
+
+Across all periods, the permutation ensemble exhibits stable baseline behavior, with null probabilities for sign structure and coherence proximity remaining near constant. The observed coherence in Periods 2–4 lies in the lowest few percent of the null distribution, whereas Period 5 does not exhibit comparable suppression.
+
+This indicates that the CAF mid-shell coherence observed in lighter p-shells is **ordering-specific** and not typical of random reorderings with the same value distribution. The degradation observed at Period 5 reflects a **selective structural crossover**, rather than a generic baseline or six-point artifact.
+
+The permutation null diagnostic is implemented in:
+
+- src/gor_caf/nulls.py
+- scripts/gor_null_permutation.py
+
+and is executed as part of the one-command verification pipeline.
