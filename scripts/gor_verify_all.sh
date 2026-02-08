@@ -1,4 +1,3 @@
-# scripts/gor_verify_all.sh  (REPLACE file contents)
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -7,6 +6,11 @@ mkdir -p data/derived
 # rm -f data/derived/*.csv data/derived/*.png 2>/dev/null || true
 
 pytest -q -W error::UserWarning
+
+python3 ./scripts/gor_validate_dataset.py \
+  --csv data/raw/nist_pblock_periods_2to5.csv \
+  --require-n-equals-period \
+  --require-anchor-monotone >/dev/null
 
 python3 ./scripts/gor_analyze.py \
   --csv data/raw/nist_pblock_periods_2to5.csv >/dev/null
@@ -38,4 +42,4 @@ python3 ./scripts/gor_plot_cv.py \
   --summary_csv data/derived/baseline_sensitivity_admissible_summary.csv \
   --out_png data/derived/cv_vs_period_admissible.png >/dev/null
 
-echo "OK: tests + CAF exhibit + permutation null + anchor sensitivity + baseline sensitivity (admissible/all) + CV plot (admissible)"
+echo "OK: tests + dataset validation + CAF exhibit + permutation null + anchor sensitivity + baseline sensitivity (admissible/all) + CV plot (admissible)"
