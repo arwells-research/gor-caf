@@ -56,6 +56,19 @@ Interpretations beyond these invariants should be treated as **downstream hypoth
 
 ---
 
+## Data contract
+
+Analyses in this repository operate on **raw NIST p-block first ionization energies** with a
+fixed on-disk schema and ordering contract.
+
+- Raw data provenance: `data/raw/README.md`
+- Machine-checkable schema: `schemas/nist_pblock_periods_2to5.schema.md`
+- Contract enforcement: `tests/test_raw_data_contract.py`
+
+Derived artifacts are generated locally (CSVs/PNGs) and are ignored by Git (see `.gitignore`).
+
+---
+
 ## Repository Structure
 
 NOTE: The tree below is shown in a plain indented format to avoid nested fenced code blocks.
